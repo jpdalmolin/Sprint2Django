@@ -1,0 +1,15 @@
+<body>
+    <form action=""method="POST">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    <button type="submit">Iniciar Sesión</button>
+    <button> 
+        <a href="register">Register</a>
+    </button>
+    <button> 
+        <a href="inicio">Volver a inicio</a>
+    </button>
+    </form>
+</body>

@@ -1,0 +1,16 @@
+<title>Deslogueado</title>
+<body>
+    <h1>Deslogueado</h1>
+    <form action=""method="POST">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    <button><a href="{% url 'inicio' %}">Vuelve a entrar</a></button>
+    <button> 
+        <a href="login">Ir a Login</a>
+        
+    </button>
+
+    </form>
+</body>

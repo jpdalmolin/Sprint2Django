@@ -1,0 +1,17 @@
+<title>Registro</title>
+<body>
+    <form action=""method="POST">
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    <button type="submit">Registrate!</button>
+    <button> 
+        <a href="login">Ir a Login</a>
+        <a href="inicio">Ir a inicio</a>
+    </button>
+    <button> 
+    <a href="inicio">Ir a inicio</a>
+    </button>
+    </form>
+</body>

@@ -1,0 +1,14 @@
+<p>estamos buscando a: {{nombre}}</p>
+{% if familiares %}
+<ul>
+    {% for familiar in familiares %}
+    <li>{{familiar.nombre}}</li>
+    <li>{{familiar.edad}}</li>
+    <li>{{familiar.fechaDeNacimiento}}</li>
+
+    {% endfor %}
+
+
+</ul>
+
+    {% endif %}

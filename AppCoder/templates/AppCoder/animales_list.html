@@ -1,0 +1,19 @@
+<title>Animales</title> 
+<ul>
+    {% for animales in object_list %}
+
+    <li>
+        <p>Nombre : {{animales.nombre}}</p>
+        <p>
+            <a href="{% url 'Detail' animales.id %}">Ver</a>
+            <a href="{% url 'Edit' animales.id %}">Editar</a>
+            <a href="{% url 'Delete' animales.id %}">Borrar</a>
+        </p>
+    </li>
+    {% endfor %}
+
+<a href="{% url 'New' %}">Nuevo Animal</a>
+
+
+
+</ul>

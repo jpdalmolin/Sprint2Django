@@ -1,0 +1,20 @@
+<title>Lista de Posts</title> 
+<ul>
+    {% for posts in object_list %}
+
+    <li>
+        <p>Titulo : {{posts.title}}</p>
+        
+        <p>
+            <a href="{% url 'Detail' posts.id %}">Ver</a>
+            <a href="{% url 'Edit' posts.id %}">Editar</a>
+            <a href="{% url 'Delete' posts.id %}">Borrar</a>
+        </p>
+    </li>
+    {% endfor %}
+
+<a href="{% url 'New' %}">Nuevo Post</a>
+
+
+
+</ul>

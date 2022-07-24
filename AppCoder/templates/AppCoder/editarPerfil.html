@@ -1,0 +1,15 @@
+<h1>Formulario Editar Perfil</h1>
+<h2>de {{usuario}}</h2>
+
+<form action="" method="POST">{% csrf_token %}
+
+    <table>
+
+        {{miFormulario.as_table}}
+    </table>
+
+
+    <input type="submit", value="Enviar" >
+
+
+</form>

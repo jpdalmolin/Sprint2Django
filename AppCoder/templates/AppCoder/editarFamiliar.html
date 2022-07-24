@@ -1,0 +1,18 @@
+<h1>Formulario - Editar Familiar</h1>
+
+    {% if miFormulario.errors %}
+        <p> estan mal los datos</p>
+    {% endif %}
+
+    <form action="" method="POST">{% csrf_token %}
+
+        <table>
+
+            {{miFormulario.as_table}}
+        </table>
+
+
+        <input type="submit", value="Enviar" >
+
+
+    </form>
