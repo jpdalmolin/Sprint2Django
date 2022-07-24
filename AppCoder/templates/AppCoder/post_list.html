@@ -6,14 +6,13 @@
         <p>Titulo : {{posts.title}}</p>
         
         <p>
-            <a href="{% url 'Detail' posts.id %}">Ver</a>
-            <a href="{% url 'Edit' posts.id %}">Editar</a>
-            <a href="{% url 'Delete' posts.id %}">Borrar</a>
+            <a href="{% url 'blogDetalle' posts.id %}">Ver</a>
+            
         </p>
     </li>
     {% endfor %}
 
-<a href="{% url 'New' %}">Nuevo Post</a>
+<a href="{% url 'blogFormulario' %}">Nuevo Post</a>
 
 
 

@@ -76,6 +76,7 @@
 }
 
 body {
+  
   margin: 0;
   font-family: var(--bs-body-font-family);
   font-size: var(--bs-body-font-size);
@@ -11365,4 +11366,8 @@ header.masthead h1, header.masthead .h1 {
 footer.footer {
   padding-top: 4rem;
   padding-bottom: 4rem;
+}
+.imagen{
+  background-image: url"media/animales.jpg";
+  
 }
