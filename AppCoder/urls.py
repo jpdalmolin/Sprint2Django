@@ -1,34 +1,34 @@
 from django.urls import path
-
 from AppCoder import views
 from django.contrib.auth.views import LogoutView
 
+
+
+
+
+
 urlpatterns = [
    
-    path('', views.inicio, name="inicio"), #esta era nuestra primer view
-    path('familiar', views.familiar, name="familiar"),
-    path('animales', views.animales, name="animales"),
-    path('vehiculos', views.vehiculos, name="vehiculos"),
-    path('familiarFormulario', views.familiarFormulario, name="familiarFormulario"),
-    path('animalFormulario', views.animalFormulario, name="animalFormulario"),
-    path('vehiculoFormulario', views.vehiculoFormulario, name="vehiculoFormulario"),
-    path('busquedaNombre', views.busquedaNombre, name="busquedaNombre"),
-    path('resultadosBusqueda', views.resultadosBusqueda, name="resultadosBusqueda"),
-    path('leerFamiliares', views.leerFamiliares, name="leerFamiliares"),
-    path('eliminarFamiliar/<familiar_nombre>/', views.eliminarFamiliar, name="eliminarFamiliar"),
-    path('editarFamiliar/<familiar_nombre>/', views.editarFamiliar, name="editarFamiliar"),
-    path('animales/list/', views.AnimalesList.as_view(), name='List'),
-    path(r'^animales/(?P<pk>\+)$', views.AnimalesDetalle.as_view(),name='Detail'),
-    path(r'^nuevo$', views.AnimalesCreacion.as_view(), name="New"),
-    path(r'^editar/(?P<pk>\d+)$',views.AnimalesUpdate.as_view(),name='Edit'),
-    path(r'^borrar/(?P<pk>\d+)$',views.AnimalesDelete.as_view(),name='Delete'),
-    path('login',views.login_request, name= 'Login'),
-    path('register',views.register, name= 'Register'),
-    path('logout',LogoutView.as_view(template_name='AppCoder/logout.html'), name='logout'),
-    path('editarPerfil', views.editarPerfil,name="editarPerfil"),
-    path('blogFormulario', views.blogFormulario, name="blogFormulario"),
-    path('blog', views.blog, name="blog"),
-    path('blogs/list/', views.BlogList.as_view(), name='blogList'),
-    path('detallePosts/<int:pk>', views.BlogDetalle.as_view(),name='blogDetalle')
+    path('', views.inicio, name="Inicio"), #esta era nuestra primer view
+    path('cursos', views.cursos, name="Cursos"),
+    path('profesores', views.profesores, name="Profesores"),
+    path('estudiantes', views.estudiantes, name="Estudiantes"),
+    path('entregables', views.entregables, name="Entregables"),
+    
+    path('buscar/', views.buscar),
+    path('leerProfesores', views.leerProfesores, name="LeerProfesores"),
+    path('eliminarProfesor/<profesor_nombre>/', views.eliminarProfesor, name="EliminarProfesor"),
+    path('editarProfesor/<profesor_nombre>/', views.editarProfesor, name="EditarProfesor"),
+    
+    path('curso/list', views.CursoList.as_view(), name='List'),
+    path(r'^(?P<pk>\d+)$', views.CursoDetalle.as_view(), name='Detail'),
+    path(r'^nuevo$', views.CursoCreacion.as_view(), name='New'),
+    path(r'^editar/(?P<pk>\d+)$', views.CursoUpdate.as_view(), name='Edit'),
+    path(r'^borrar/(?P<pk>\d+)$', views.CursoDelete.as_view(), name='Delete'),
+    path('login', views.login_request, name='login'),
+    path('register', views.register, name='register'),
+    path('logout', LogoutView.as_view(template_name='AppCoder/logout.html'), name='logout'),
+    path('editarPerfil', views.editarPerfil, name='EditarPerfil'),
+
 ]
 

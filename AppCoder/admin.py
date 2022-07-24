@@ -1,13 +1,15 @@
 from django.contrib import admin
-
-from AppCoder.views import familiar
-from .models import *
-
+from  .models import * #importamos el archivo models
 
 # Register your models here.
+#registramos los modelos
 
-admin.site.register(Familiar)
-admin.site.register(Animales)
-admin.site.register(Vehiculos)
+admin.site.register(Curso)
+
+admin.site.register(Estudiante)
+
+admin.site.register(Profesor)
+
+admin.site.register(Entregable)
+
 admin.site.register(Avatar)
-admin.site.register(Post)

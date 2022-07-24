@@ -1,349 +1,294 @@
+from typing import List
+from django.http.request import QueryDict
+from django.shortcuts import redirect, render, HttpResponse
 from django.http import HttpResponse
-from django.shortcuts import render
-from AppCoder.models import Animales, Familiar,Vehiculos,Avatar
-from django.template import Template,Context,loader
-from AppCoder.forms import FamiliarFormulario
-from AppCoder.forms import AnimalFormulario
-from AppCoder.forms import VehiculoFormulario
-from AppCoder.forms import BlogFormulario
-from AppCoder.forms import UserEditForm
+from AppCoder.models import Curso, Profesor, Avatar
+from AppCoder.forms import CursoFormulario, ProfesorFormulario, UserRegisterForm, UserEditForm
+
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView,UpdateView,DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
-from django.contrib.auth import login,logout,authenticate
-from django.contrib.auth.models import User
-from django import forms
-from AppCoder.forms import UserRegisterForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from .models import Post
-from django.views import generic
+
+# from ProyectoCoder.AppCoder.models import Avatar
+# Create your views here.
+
+def curso(request):
+
+      curso =  Curso(nombre="Desarrollo web", camada="19881")
+      curso.save()
+      documentoDeTexto = f"--->Curso: {curso.nombre}   Camada: {curso.camada}"
+
+
+      return HttpResponse(documentoDeTexto)
+
+# @login_required
+def inicio(request):
+      avatares = Avatar.objects.filter(user=request.user.id)
+      return render(request, "AppCoder/inicio.html" ,{"url": avatares[0].imagen.url} )
+      
+#
 
 
 
-def familiar(self):
+def estudiantes(request):
 
-    familiar1 = Familiar(nombre="juan", edad="20",fechaDeNacimiento="2002-10-20")
-    familiar1.save()
-    
-   
-    familiar2 = Familiar(nombre="Maria", edad="40",fechaDeNacimiento="1982-07-13")
-    familiar2.save()
-
-    familiar3 = Familiar(nombre="Marcos", edad="30",fechaDeNacimiento="1992-08-20")
-    familiar3.save()
-
-    diccionario = {"nombre1":familiar1.nombre, "edad1":familiar1.edad,"fechaDeNacimiento1":familiar1.fechaDeNacimiento,"nombre2":familiar2.nombre, "edad2":familiar2.edad,"fechaDeNacimiento2":familiar2.fechaDeNacimiento,"nombre3":familiar3.nombre, "edad3":familiar3.edad,"fechaDeNacimiento3":familiar3.fechaDeNacimiento}
-    
-    nueva_plantilla= loader.get_template('template_entregable.html')
+      return render(request, "AppCoder/estudiantes.html")
 
 
-    documentoDeTexto = nueva_plantilla.render(diccionario)
+def entregables(request):
+
+      return render(request, "AppCoder/entregables.html")
 
 
-    return HttpResponse(documentoDeTexto)
+def cursos(request):
 
-
-
-@login_required
-def animales(request):
-
-      return render(request, "AppCoder/animales.html")
-
-def vehiculos(request):
-
-      return render(request, "AppCoder/vehiculos.html")
-
-def familiarFormulario(request):
       if request.method == 'POST':
 
-            miFormulario= FamiliarFormulario(request.POST)
+            miFormulario = CursoFormulario(request.POST) #aquí mellega toda la información del html
+
             print(miFormulario)
-            
-            if miFormulario.is_valid:
 
-                  informacion =miFormulario.cleaned_data
-                  print(informacion)
-                  familiar=Familiar(nombre=informacion['nombre'], edad=informacion['edad'],fechaDeNacimiento=informacion['fechaDeNacimiento'])
+            if miFormulario.is_valid:   #Si pasó la validación de Django
 
-                  familiar.save()
+                  informacion = miFormulario.cleaned_data
 
-                  return render(request, "AppCoder/inicio.html")
+                  curso = Curso (nombre=informacion['curso'], camada=informacion['camada']) 
 
-      else:
+                  curso.save()
 
-            miFormulario= FamiliarFormulario()
+                  return render(request, "AppCoder/inicio.html") #Vuelvo al inicio o a donde quieran
 
-      return render(request, "AppCoder/familiarFormulario.html", {"miFormulario":miFormulario})
+      else: 
 
-def animalFormulario(request):
+            miFormulario= CursoFormulario() #Formulario vacio para construir el html
+
+      return render(request, "AppCoder/cursos.html", {"miFormulario":miFormulario})
+
+
+
+
+def profesores(request):
+
       if request.method == 'POST':
 
-            miFormulario= AnimalFormulario(request.POST)
+            miFormulario = ProfesorFormulario(request.POST) #aquí mellega toda la información del html
+
             print(miFormulario)
-            
-            if miFormulario.is_valid:
 
-                  informacion =miFormulario.cleaned_data
-                  print(informacion)
-                  animal=Animales(nombre=informacion['nombre'], fechaDeNacimiento=informacion['fechaDeNacimiento'],tipo=informacion['tipo'])
+            if miFormulario.is_valid:   #Si pasó la validación de Django
 
-                  animal.save()
+                  informacion = miFormulario.cleaned_data
 
-                  return render(request, "AppCoder/inicio.html")
+                  profesor = Profesor (nombre=informacion['nombre'], apellido=informacion['apellido'],
+                   email=informacion['email'], profesion=informacion['profesion']) 
 
-      else:
+                  profesor.save()
 
-            miFormulario= AnimalFormulario()
+                  return render(request, "AppCoder/inicio.html") #Vuelvo al inicio o a donde quieran
 
-      return render(request, "AppCoder/animalFormulario.html", {"miFormulario":miFormulario})
+      else: 
 
+            miFormulario= ProfesorFormulario() #Formulario vacio para construir el html
 
-def vehiculoFormulario(request):
-      if request.method == 'POST':
-
-            miFormulario= VehiculoFormulario(request.POST)
-            print(miFormulario)
-            
-            if miFormulario.is_valid:
-
-                  informacion =miFormulario.cleaned_data
-                  print(informacion)
-                  vehiculo=Vehiculos(kilometraje=informacion['kilometraje'], modelo=informacion['modelo'],tipo=informacion['tipo'])
-
-                  vehiculo.save()
-
-                  return render(request, "AppCoder/inicio.html")
-
-      else:
-
-            miFormulario= VehiculoFormulario()
-
-      return render(request, "AppCoder/vehiculoFormulario.html", {"miFormulario":miFormulario})
+      return render(request, "AppCoder/profesores.html", {"miFormulario":miFormulario})
 
 
-def busquedaNombre(request):
-
-      return render(request, "AppCoder/busquedaNombre.html")
 
 
-def resultadosBusqueda(request):
 
-      if request.GET['nombre']:
-      #respuesta= f" ESTOY BUSCANDO AL FAMILIAR DE NOMBRE : {request.GET['nombre']}"
-            nombre= request.GET['nombre']
-            familiares=Familiar.objects.filter(nombre__icontains=nombre) 
 
-            return render(request, "AppCoder/resultadosBusqueda.html",{"familiares":familiares,"nombre":nombre})
+def buscar(request):
 
-      else:
-            respuesta= "No enviaste datos"
+      if  request.GET["camada"]:
 
+	      #respuesta = f"Estoy buscando la camada nro: {request.GET['camada'] }" 
+            camada = request.GET['camada'] 
+            cursos = Curso.objects.filter(camada__icontains=camada)
+
+            return render(request, "AppCoder/inicio.html", {"cursos":cursos, "camada":camada})
+
+      else: 
+
+	      respuesta = "No enviaste datos"
+
+      #No olvidar from django.http import HttpResponse
       return HttpResponse(respuesta)
 
-def leerFamiliares(request):
 
-      familiares=Familiar.objects.all()
 
-      contexto={"familiares":familiares}
+def leerProfesores(request):
 
-      return render(request, "AppCoder/leerFamiliares.html",contexto)
+      profesores = Profesor.objects.all() #trae todos los profesores
 
-def eliminarFamiliar(request,familiar_nombre):
+      contexto= {"profesores":profesores} 
 
-      familiar=Familiar.objects.get(nombre=familiar_nombre)
-      familiar.delete()
+      return render(request, "AppCoder/leerProfesores.html",contexto)
 
-      familiares=Familiar.objects.all()
 
-      contexto={"familiares":familiares}
+
+def eliminarProfesor(request, profesor_nombre):
+
+      profesor = Profesor.objects.get(nombre=profesor_nombre)
+      profesor.delete()
       
-      return render(request,"AppCoder/leerFamiliares.html",contexto)
+      #vuelvo al menú
+      profesores = Profesor.objects.all() #trae todos los profesores
 
-def editarFamiliar(request,familiar_nombre):
+      contexto= {"profesores":profesores} 
 
-      familiar=Familiar.objects.get(nombre=familiar_nombre)
+      return render(request, "AppCoder/leerProfesores.html",contexto)
 
-      if request.method =='POST':
-            miFormulario=FamiliarFormulario(request.POST)
 
-            print (miFormulario)
 
-            if miFormulario.is_valid:
-                  informacion= miFormulario.cleaned_data
+def editarProfesor(request, profesor_nombre):
 
-                  familiar.nombre=informacion['nombre']
-                  familiar.edad=informacion['edad']
-                  familiar.fechaDeNacimiento=informacion['fechaDeNacimiento']
+      #Recibe el nombre del profesor que vamos a modificar
+      profesor = Profesor.objects.get(nombre=profesor_nombre)
 
-                  familiar.save()
-
-                  return render(request, "AppCoder/inicio.html")
-
-      else:
-            miFormulario=FamiliarFormulario(initial={'nombre':familiar.nombre, 'edad':familiar.edad,'fechaDeNacimiento':familiar.fechaDeNacimiento})
-
-      return render(request,"AppCoder/editarFamiliar.html", {"miFormulario":miFormulario, "familiar_nombre":familiar_nombre}) 
-                 
-
-class AnimalesList(LoginRequiredMixin,ListView):
-
-      model=Animales
-      template_name ="AppCoder/animales_list.html"
-
-class AnimalesDetalle(generic.DetailView):
-
-      model=Animales
-      template_name="AppCoder/animales_detalle.html"
-
-class AnimalesCreacion(CreateView):
-
-      model=Animales
-      success_url="/AppCoder/animales/list"
-      fields=['nombre','tipo','fechaDeNacimiento']
-
-class AnimalesUpdate(UpdateView):
-
-      model=Animales
-      success_url="/AppCoder/animales/list"
-      fields=['nombre','tipo','fechaDeNacimiento']
-
-class AnimalesDelete(DeleteView):
-
-      model=Animales
-      success_url="/AppCoder/animales/list"
-      
-def login_request(request):
-
-      if request.method =="POST":
-            form = AuthenticationForm(request,data=request.POST)
-            print(form)
-            if form.is_valid():
-                  usuario=form.cleaned_data.get('username')
-                  contra=form.cleaned_data.get('password')
-                  print(usuario,contra)
-                  user= authenticate(username=usuario, password=contra)
-                  print(user)
-                  if user is not None:
-                        login(request,user)
-
-                        return render(request,"AppCoder/inicio.html", {"mensaje":f"Bienvenido {usuario}"})
-                  else:
-                        print(2)
-                        return render(request,"AppCoder/inicio.html", {"mensaje":"Error datos incorrectos"})
-
-            else:
-
-                  return render(request,"AppCoder/inicio.html", {"mensaje":"Error, formulario erroneo"})
-      form=AuthenticationForm()
-      print(3)
-      return render(request,"AppCoder/login.html", {'form':form})
-
-def register(request):
-
+      #Si es metodo POST hago lo mismo que el agregar
       if request.method == 'POST':
 
-            form= UserCreationForm(request.POST)
+            miFormulario = ProfesorFormulario(request.POST) #aquí mellega toda la información del html
+
+            print(miFormulario)
+
+            if miFormulario.is_valid:   #Si pasó la validación de Django
+
+                  informacion = miFormulario.cleaned_data
+
+                  profesor.nombre = informacion['nombre']
+                  profesor.apellido = informacion['apellido']
+                  profesor.email = informacion['email']
+                  profesor.profesion = informacion['profesion']
+
+                  profesor.save()
+
+                  return render(request, "AppCoder/inicio.html") #Vuelvo al inicio o a donde quieran
+      #En caso que no sea post
+      else: 
+            #Creo el formulario con los datos que voy a modificar
+            miFormulario= ProfesorFormulario(initial={'nombre': profesor.nombre, 'apellido':profesor.apellido , 
+            'email':profesor.email, 'profesion':profesor.profesion}) 
+
+      #Voy al html que me permite editar
+      return render(request, "AppCoder/editarProfesor.html", {"miFormulario":miFormulario, "profesor_nombre":profesor_nombre})
+
+
+
+
+class CursoList(LoginRequiredMixin, ListView):
+
+      model = Curso 
+      template_name = "AppCoder/cursos_list.html"
+
+
+
+class CursoDetalle(DetailView):
+
+      model = Curso
+      template_name = "AppCoder/curso_detalle.html"
+
+
+
+class CursoCreacion(CreateView):
+
+      model = Curso
+      success_url = "/AppCoder/curso/list"
+      fields = ['nombre', 'camada']
+
+
+class CursoUpdate(UpdateView):
+
+      model = Curso
+      success_url = "/AppCoder/curso/list"
+      fields  = ['nombre', 'camada']
+
+
+class CursoDelete(DeleteView):
+
+      model = Curso
+      success_url = "/AppCoder/curso/list"
+     
+
+#iniciamos el login
+def login_request(request):
+      #capturamos el post
+      if request.method == "POST":
+            #inicio esl uso del formulario de autenticación que me da Django
+            #me toma dos parámetros el request y los datos que toma del request
+            form = AuthenticationForm(request, data = request.POST)
+            
+            if form.is_valid():
+                  usuario = form.cleaned_data.get('username')
+                  contra = form.cleaned_data.get('password')
+
+                  user = authenticate(username = usuario , password = contra)
+                  print(1)
+                  if user is not None:
+                        login(request, user)
+
+                        return render (request, "AppCoder/inicio.html", {"mensaje": f"Bienvenido {usuario}"})
+                  else:
+                        print(2)
+                        return render (request, "AppCoder/inicio.html", {"mensaje":"Error en los datos"})
+            else:
+                  return render(request, "AppCoder/inicio.html", {"mensaje":"Formulario erroneo"})
+      
+      #al final recuperamos el form
+      form = AuthenticationForm()
+      print(3)
+      return render(request, "AppCoder/login.html", {'form': form})
+
+
+
+def register(request):
+      
+      if request.method == "POST":
+
+            form = UserRegisterForm(request.POST)
 
             if form.is_valid():
-
-                  username=form.cleaned_data['username']
+                  username = form.cleaned_data['username']
+                 
                   form.save()
-                  return render(request,"AppCoder/inicio.html", {"mensaje":"Usuario Creado !"})
 
-      else:
-            form=UserRegisterForm()
+                  return render(request, "AppCoder/inicio.html", {"mensaje": "usuario creado"})
 
-      return render(request,"AppCoder/registro.html",{"form":form})      
+      else: 
+            form = UserRegisterForm()
+
+      return render(request, "AppCoder/registro.html", {"form": form})
+
+
 
 @login_required
 def editarPerfil(request):
-      #Instancia del login
-      usuario =request.user
-      
-      if request.method =='POST':
-            miFormulario=UserEditForm(request.POST)
-            if miFormulario.is_valid():
-
-                  informacion=miFormulario.cleaned_data
-                  #datos que se modificaran
-                  usuario.email=informacion['email']
-                  usuario.password1=informacion['password1']
-                  usuario.password2=informacion['password1']
-                  usuario.save()
-
-                  return render(request, "AppCoder/inicio.html") #vuelve al inicio
-            
-      else:
-
-            miFormulario=UserEditForm(initial={'email':usuario.email})
-
-      return render(request, "AppCoder/editarPerfil.html",{"miFormulario":miFormulario, "usuario":usuario})
-
-
-def inicio(request):
-
-      avatares = Avatar.objects.filter(user=request.user.id)
-
-      try:
-            return render(request, "AppCoder/inicio.html", {"url":avatares[0].imagen.url} )
-      except IndexError:
-            return render(request, "AppCoder/inicio.html")
-
-
-def blogFormulario(request):
+      #se instancia el Login; 
+      usuario = request.user
       
       if request.method == 'POST':
-
-            miFormulario= BlogFormulario(request.POST,request.FILES)
-            print(miFormulario)
-            
-            if miFormulario.is_valid:
-
-                  informacion =miFormulario.cleaned_data
-                  print(informacion)
+            miFormulario = UserEditForm(request.POST)
+            if miFormulario.is_valid(): #si pasa la validación Django
+                  informacion = miFormulario.cleaned_data
                   
-                  posts=Post(title=informacion['title'], content=informacion['content'],image=informacion['image'],author=informacion['author'])
-
-                  posts.save()
-
-                  return render(request, "AppCoder/inicio.html")
+                  #datos que modificaríamos
+                  usuario.email = informacion['email']#alg@algo.com
+                  usuario.password1 = informacion['password1']#pass
+                  usuario.password2 = informacion['password2']
+                  usuario.save()
+            
+                  return render(request, "AppCoder/inicio.html") #vuelvo a inicio
 
       else:
-
-            miFormulario= BlogFormulario()
-
-      return render(request, "AppCoder/blogFormulario.html", {"miFormulario":miFormulario})
-
-
-def blog(request):
-    posts = Post.objects.all()
-    return render(request, "AppCoder/blog.html", {'posts':posts})
-
-class BlogList(generic.ListView):
-
-      model=Post
-      template_name= "AppCoder/blog_list.html"
-
-class BlogDetalle(generic.DetailView):
-
-      model=Post
-      template_name ="AppCoder/blog_detalle.html"
-
-      def get_object(self):
-            try:
-                  instance=self.model.objects.get(id=self.kwargs['pk'])
-            except expression as identifier:
-                  pass
-            return instance
-
-      def get_context_data(self, **kwargs):
-            context={}
-            context['object'] =self.get_object()
-            return context
+            #creo el formulario con los datos que voy a modificar
+            miFormulario = UserEditForm(initial={'email':usuario.email})
       
-      def get(self,request,*args,**kwargs):
-            return render(request,self.template_name,self.get_context_data())
+      #voy al HTML que me permite editar
+      return render(request, "AppCoder/editarPerfil.html", {"miFormulario": miFormulario, "usuario": usuario})
+
+
